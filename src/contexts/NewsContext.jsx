@@ -9,6 +9,7 @@ const initialState = {
   nbPages: 0,
   page: 0,
   hits: [],
+  hitsPerPage: 0,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -20,6 +21,7 @@ function reducer(state, action) {
         isLoading: false,
         hits: action.payload.hits,
         nbPages: action.payload.nbPages,
+        hitsPerPage: action.payload.hitsPerPage,
       };
     case "news/remove":
       return {
@@ -31,8 +33,6 @@ function reducer(state, action) {
 
     case "news/getNextPage":
       if (state.page + 1 >= state.nbPages) return { ...state };
-      //   let pageInc = state.page + 1;
-      //   if (pageInc >= state.nbPages) pageInc = 0;
 
       return {
         ...state,
@@ -40,41 +40,44 @@ function reducer(state, action) {
       };
     case "news/getPrevPage":
       if (state.page - 1 < 0) return { ...state };
-      //   let pageDec = state.page - 1;
-      //   if (pageDec <= 0) pageDec = 0;
 
       return { ...state, page: state.page - 1 };
+    case "news/handlePageClick":
+      return {
+        ...state,
+        page: action.payload,
+      };
 
     case "rejected":
       return { ...state, isLoading: false, error: action.payload };
+    case "reset":
+      return initialState;
   }
 }
 
 function NewsProvider({ children }) {
-  const [{ query, page, nbPages, hits, isLoading }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ query, hitsPerPage, page, nbPages, hits, isLoading }, dispatch] =
+    useReducer(reducer, initialState);
   useEffect(
     function () {
       const controller = new AbortController();
       async function fetchData() {
-        if (!query) return;
+        if (!query) {
+          dispatch({ type: "reset" });
+          return;
+        }
         dispatch({ type: "loading" });
         try {
           const res = await fetch(`${BASE_URL}query=${query}&page=${page}`, {
             signal: controller.signal,
           });
           const data = await res.json();
-          console.log(data);
-          // const filteredUsers = data.users.filter((user) =>
-          //   user.firstName.toLowerCase().includes(query)
-          // );
           dispatch({
             type: "news/loaded",
             payload: {
               hits: data.hits,
               nbPages: data.nbPages,
+              hitsPerPage: data.hitsPerPage,
             },
           });
         } catch (err) {
@@ -105,17 +108,26 @@ function NewsProvider({ children }) {
   function getPrevPage() {
     dispatch({ type: "news/getPrevPage" });
   }
+  function handlePageClick({ selected }) {
+    dispatch({
+      type: "news/handlePageClick",
+      payload: selected,
+    });
+  }
 
   return (
     <NewsContext.Provider
       value={{
         getPrevPage,
+        handlePageClick,
         getNextPage,
         searchPost,
+
         handleRemove,
         query,
         isLoading,
         nbPages,
+        hitsPerPage,
         page,
         hits,
       }}

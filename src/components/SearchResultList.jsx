@@ -2,7 +2,7 @@ import { useNews } from "./../contexts/NewsContext";
 import { FaComments } from "react-icons/fa";
 
 function SearchResultList() {
-  const { hits, nbPages, isLoading, handleRemove } = useNews();
+  const { hits, isLoading, handleRemove } = useNews();
 
   if (isLoading) return <h1>Loading...</h1>;
   if (hits)
@@ -16,12 +16,13 @@ function SearchResultList() {
 }
 
 function Result({ hit, handleRemove }) {
-  const { title, author, num_comments, url, objectID } = hit;
+  const { title, author, num_comments, url, objectID, created_at } = hit;
+  const date = new Date(created_at).toLocaleDateString();
   return (
     <div className="card">
       <h2>{title}</h2>
       <p>
-        By {author} | {num_comments} <FaComments />
+        By {author} | {num_comments} <FaComments /> | {date}
       </p>
       <div className="card-btn">
         <a href={url} target="_blank">

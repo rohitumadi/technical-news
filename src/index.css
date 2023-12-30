@@ -127,3 +127,25 @@ body {
   background-color: #7950f2;
   color: white;
 }
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 1rem;
+}
+.paginationContainer a {
+  border: 2px solid #444;
+  background-color: #7950f2;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+.paginationContainer a:hover {
+  background-color: #fff;
+  color: #7950f2;
+}
+.activePage a {
+  background-color: #fff;
+  color: #7950f2;
+}

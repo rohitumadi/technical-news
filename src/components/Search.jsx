@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNews } from "../contexts/NewsContext";
 
 function Search() {

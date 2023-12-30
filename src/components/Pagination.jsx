@@ -1,21 +1,29 @@
+import ReactPaginate from "react-paginate";
 import { useNews } from "../contexts/NewsContext";
 
 function Pagination() {
-  const { page, nbPages, getPrevPage, getNextPage, hits } = useNews();
+  const {
+    nbPages,
+
+    hits,
+
+    handlePageClick,
+  } = useNews();
 
   if (hits.length)
     return (
       <div className="pagination">
-        <button className="btn" onClick={getPrevPage}>
-          Prev
-        </button>
-
-        <span>
-          {page + 1} of {nbPages}
-        </span>
-        <button className="btn" onClick={getNextPage}>
-          Next
-        </button>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={nbPages}
+          containerClassName="paginationContainer"
+          activeClassName="activePage"
+          previousLabel="< previous"
+          // renderOnZeroPageCount={null}
+        />
       </div>
     );
 }
