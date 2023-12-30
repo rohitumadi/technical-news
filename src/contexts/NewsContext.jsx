@@ -30,18 +30,20 @@ function reducer(state, action) {
       return { ...state, query: action.payload };
 
     case "news/getNextPage":
-      let pageInc = state.page + 1;
-      if (pageInc >= state.nbPages) pageInc = 0;
+      if (state.page + 1 >= state.nbPages) return { ...state };
+      //   let pageInc = state.page + 1;
+      //   if (pageInc >= state.nbPages) pageInc = 0;
 
       return {
         ...state,
-        page: pageInc,
+        page: state.page + 1,
       };
     case "news/getPrevPage":
-      let pageDec = state.page - 1;
-      if (pageDec <= 0) pageDec = 0;
+      if (state.page - 1 < 0) return { ...state };
+      //   let pageDec = state.page - 1;
+      //   if (pageDec <= 0) pageDec = 0;
 
-      return { ...state, page: pageDec };
+      return { ...state, page: state.page - 1 };
 
     case "rejected":
       return { ...state, isLoading: false, error: action.payload };
