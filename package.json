@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "vite build && gh-pages -b with-react-paginate -d dist",
+    "deploy": "vite build && gh-pages -b with-react-paginate -d dist --no-push",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
